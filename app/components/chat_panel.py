@@ -53,15 +53,16 @@ class ChatPanel:
 
         with chat_container:
             for msg in messages:
-                if msg.role == MessageRole.SYSTEM:
+                if msg.get("role") == "system":
                     continue  # Don't display system prompts
 
-                with st.chat_message(msg.role.value):
-                    st.write(msg.content)
+                with st.chat_message(msg.get("role")):
+                    st.write(msg.get("content", ""))
 
                     # Show metadata if available and enabled
-                    if show_metadata and msg.metadata:
-                        meta = msg.metadata
+                    metadata = msg.get("metadata")
+                    if show_metadata and metadata:
+                        meta = metadata
                         meta_cols = st.columns(4)
                         with meta_cols[0]:
                             if meta.get("latency_s"):
