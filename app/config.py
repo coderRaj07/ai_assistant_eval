@@ -35,8 +35,6 @@ class ModelConfig:
     OR_MODEL_CHAIN = [
         "liquid/lfm-2.5-1.2b-instruct:free",
         "openai/gpt-4o-mini:free",
-        "liquid/lfm-2.5-1.2b-thinking:free",
-        "meta-llama/llama-3.2-3b-instruct:free",
         "nvidia/nemotron-nano-9b-v2:free",
     ]
     OR_TEMPERATURE = 0.7
