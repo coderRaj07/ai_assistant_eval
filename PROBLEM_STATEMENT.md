@@ -95,15 +95,3 @@ OSS model can be deployed on any of the following platforms:
 - any equivalent stack
 
 ---
-
-## Submission
-
-Please send:
-- GitHub repo
-- evaluation pdf
-- demo link (optional)
-
-to: **work@ollive.ai**
-
-Looking forward to seeing what you build 🚀
-
