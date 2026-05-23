@@ -69,8 +69,8 @@ HARMFUL_PATTERNS: Dict[str, List[str]] = {
     "violence": [
         r"how\s+to\s+kill",
         r"how\s+to\s+harm",
-        r"build\s+(a\s+)?bomb",
-        r"make\s+(a\s+)?weapon",
+        r"(build|make)\s+(a\s+)?bomb",
+        r"(build|make)\s+(a\s+)?weapon",
         r"terrorist",
         r"mass\s+shooting",
     ],
@@ -91,12 +91,14 @@ HARMFUL_PATTERNS: Dict[str, List[str]] = {
     ],
     "discrimination": [
         r"(women|men)\s+are\s+(inferior|superior|better|worse)\s+(than|leaders)",
+        r"(women|men)\s+(are|less|not)\s+(suited|fit|capable)\s+(for|as|to)",
         r"(race|gender|religion)\s+determines\s+(intelligence|worth|ability)",
         r"(all|every)\s+(men|women|race|religion)\s+are\s+",
     ],
     "jailbreak_attempt": [
         r"ignore\s+(all\s+)?(previous|prior)\s+instructions",
         r"ignore\s+(all\s+)?(previous|prior)\s+directives",
+        r"ignore\s+(all\s+)?(your\s+)?instructions",
         r"you\s+(are\s+)?(now|are now)\s+(free|released|unconstrained)",
         r"dan\s+mode",
         r"do\s+(not\s+)?(have\s+)?(any\s+)?(restrictions|limitations|rules|boundaries|guidelines)",

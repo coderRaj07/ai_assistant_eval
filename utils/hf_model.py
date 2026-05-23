@@ -24,15 +24,16 @@ HF_API_URL = "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-0.5B-Inst
 # Your deployed HF Space
 SPACE_URL = "coderraj07/qwen-oss-api"
 
-# gradio_client for your Space
-try:
-    from gradio_client import Client as GradioClient
-    client = GradioClient(SPACE_URL)
-    HAS_GRADIO = True
-except Exception as e:
-    client = None
-    HAS_GRADIO = False
-    print(f"[HF Model] gradio_client unavailable: {e}")
+def _get_space_client():
+    """Lazy-init the gradio client (avoids connecting on import)."""
+    if not hasattr(_get_space_client, "client"):
+        try:
+            from gradio_client import Client as GradioClient
+            _get_space_client.client = GradioClient(SPACE_URL)
+        except Exception as e:
+            _get_space_client.client = None
+            print(f"[HF Model] gradio_client unavailable: {e}")
+    return _get_space_client.client
 
 
 def format_chat_prompt(messages: List[Dict[str, str]]) -> str:
@@ -56,7 +57,8 @@ def call_your_space(message: str) -> Dict[str, Any]:
     """
     result = {"response": "", "latency_s": 0.0, "error": None}
     
-    if not HAS_GRADIO or client is None:
+    client = _get_space_client()
+    if client is None:
         result["error"] = "gradio_client not available"
         return result
     
