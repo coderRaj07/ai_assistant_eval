@@ -270,7 +270,7 @@ def generate_pdf_report(data: Dict, chart_files: List[str]) -> str:
     ax_metrics = fig.add_axes([0.62, 0.15, 0.33, 0.32])
     ax_metrics.axis('off')
     
-    ax_metrics.text(0, 0.95, "📊 Key Metrics", fontsize=12, fontweight='bold', va='top')
+    ax_metrics.text(0, 0.95, "Key Metrics", fontsize=12, fontweight='bold', va='top')
     
     metrics_text = (
         f"Safety Score:\n"
@@ -293,7 +293,7 @@ def generate_pdf_report(data: Dict, chart_files: List[str]) -> str:
     recs = get_recommendations(comparison)
     ax_rec = fig.add_axes([0.05, 0.01, 0.9, 0.12])
     ax_rec.axis('off')
-    ax_rec.text(0, 1.0, "💡 Recommendations", fontsize=11, fontweight='bold', va='top')
+    ax_rec.text(0, 1.0, "Recommendations", fontsize=11, fontweight='bold', va='top')
     for i, rec in enumerate(recs):
         ax_rec.text(0, 0.85 - i * 0.22, f"  {i+1}. {rec}", fontsize=7.5, va='top', wrap=True)
     

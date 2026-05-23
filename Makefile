@@ -24,7 +24,7 @@ help:
 install:
 	@echo "$(BLUE)Installing dependencies...$(NC)"
 	pip install -r requirements.txt
-	@echo "$(GREEN)✓ Dependencies installed$(NC)"
+	@echo "$(GREEN)Dependencies installed$(NC)"
 
 run:
 	@echo "$(BLUE)Starting Streamlit app...$(NC)"
@@ -34,46 +34,25 @@ evaluate:
 	@echo "$(BLUE)Running full evaluation (185 prompts across 18 categories)...$(NC)"
 	@echo "$(BLUE)This may take 10-20 minutes depending on API speeds...$(NC)"
 	time python3 evaluation/evaluator.py
-	@echo "$(GREEN)✓ Evaluation complete$(NC)"
+	@echo "$(GREEN)Evaluation complete$(NC)"
 
-test-quick:
+test:
 	@echo "$(BLUE)Running quick API connectivity test...$(NC)"
-	python3 -c "
-import sys, os
-sys.path.insert(0, '.')
-from dotenv import load_dotenv
-load_dotenv('.env')
-from utils.openrouter_model import generate_response as or_gen
-print('1/2 Testing Frontier (OpenRouter)...', end=' ')
-r = or_gen([{'role': 'user', 'content': 'What is 2+2? Answer briefly.'}])
-print(f'{r[\"model_used\"]} | {r[\"latency_s\"]}s | {r[\"response\"][:80]}')
-print('2/2 Testing OSS (Qwen2.5)...', end=' ')
-from utils.hf_model import generate_response as hf_gen
-r = hf_gen([{'role': 'user', 'content': 'What is 2+2? Answer briefly.'}])
-print(f'{r[\"latency_s\"]}s | {r[\"response\"][:80]}')
-print('$(GREEN)✓ Quick test passed$(NC)')
-	"
-
-test: test-quick
+	python3 -c "import sys; sys.path.insert(0, '.'); from dotenv import load_dotenv; load_dotenv('.env'); from utils.openrouter_model import generate_response as or_gen; print('1/2 Testing Frontier (OpenRouter)...', end=' '); r = or_gen([{'role': 'user', 'content': 'What is 2+2? Answer briefly.'}]); print(f'{r[\"model_used\"]} | {r[\"latency_s\"]}s | {r[\"response\"][:80]}'); print('2/2 Testing OSS (Qwen2.5)...', end=' '); from utils.hf_model import generate_response as hf_gen; r = hf_gen([{'role': 'user', 'content': 'What is 2+2? Answer briefly.'}]); print(f'{r[\"latency_s\"]}s | {r[\"response\"][:80]}'); print('$(GREEN)Quick test passed$(NC)')"
 
 report:
-	@echo "$(BLUE)Generating evaluation PDF report...$(NC)"
+	@echo "$(BLUE)Generating evaluation PDF report from latest results...$(NC)"
 	python3 evaluation/generate_report.py
-	@echo "$(GREEN)✓ Report generated$(NC)"
+	@echo "$(GREEN)Report saved to evaluation/output/$(NC)"
 
-report-pdf:
-	@echo "$(BLUE)Generating PDF report from latest evaluation results...$(NC)"
-	python3 evaluation/generate_report.py
-	@echo "$(GREEN)✓ PDF report saved to evaluation/output/$(NC)"
+report-pdf: report
 
 clean:
 	@echo "$(BLUE)Cleaning up...$(NC)"
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete
-	find . -type f -name "*.pyo" -delete
-	find . -type f -name "*.so" -delete
 	rm -rf .pytest_cache build/ dist/ *.egg-info/
-	@echo "$(GREEN)✓ Clean complete$(NC)"
+	@echo "$(GREEN)Clean complete$(NC)"
 
 deploy:
 	@echo "$(BLUE)Preparing for Hugging Face Spaces deployment...$(NC)"
@@ -91,4 +70,4 @@ deploy:
 	@echo "   git remote add space https://huggingface.co/spaces/YOUR_USER/ai-assistant-eval"
 	@echo "   git push space main"
 	@echo ""
-	@echo "== OR use Streamlit Cloud: https://streamlit.io/cloud =="
+	@echo "OR use Streamlit Cloud: https://streamlit.io/cloud"
