@@ -13,9 +13,9 @@
 
 ---
 
-## 📋 Quick Overview for Reviewers
+## ✅ Quick Overview — All Bonus Requirements Completed
 
-This project fulfills **all bonus requirements**:
+Here is a quick checklist of everything built, mapped to the problem statement:
 
 | Requirement | Status | Details |
 |-------------|--------|---------|
@@ -32,8 +32,8 @@ This project fulfills **all bonus requirements**:
 
 ## 📋 Table of Contents
 
-- [Quick Overview for Reviewers](#-quick-overview-for-reviewers)
-- [Flow: What the Reviewer Sees](#-flow-what-the-reviewer-sees)
+- [All Bonus Requirements Completed](#-quick-overview--all-bonus-requirements-completed)
+- [Project Walkthrough](#-project-walkthrough--what-a-reviewer-sees)
 - [Overview](#-overview)
 - [Architecture](#-architecture)
 - [Models Compared](#-models-compared)
@@ -54,8 +54,7 @@ This project fulfills **all bonus requirements**:
 
 ---
 
-## 🔄 Flow: What the Reviewer Sees
-
+## 🔍 Project Walkthrough — What a Reviewer Sees
 ```
 [1] Reviewer clones repo
     │
@@ -212,30 +211,74 @@ ai_assistant_eval/
 ### Data Flow
 
 ```
-User Input
-    │
-    ├──→ Guardrails (Input Safety Check - 7 categories)
-    │      │
-    │      ├── Blocked ──→ Refusal Response (category-specific)
-    │      │                  └── Logged to Guardrail Event Log
-    │      │
-    │      └── Passed ──→ Model Selection
-    │                       │
-    │                       ├── OSS (Qwen2.5-0.5B) ──→ HF Space (gradio_client)
-    │                       │                              │
-    │                       │                         └── Fallback: HF Inference API
-│                       │
-│                       ├── Frontier (Gemini 2.0 Flash) ──→ Gemini Direct API
-│                       │   │
-│                       │   └── Fallback: OpenRouter (liquid/lfm-1.2B → free chain)
-    │                                                   │
-    │                   Guardrails (Output Safety Check)←─┘
-    │                              │
-    │                              ├── Filtered ──→ Blocked Response
-    │                              │
-    │                              └── Safe ──→ Display to User
-    │
-    └──→ Memory Update (session state, context pruning, guardrail logging)
+                    ┌─────────────────────────────────────┐
+                    │         User Input                  │
+                    └─────────────┬───────────────────────┘
+                                  │
+                                  ▼
+              ┌──────────────────────────────────────┐
+              │   🛡️ Guardrails — Input Safety Check │
+              │   (7 categories: malware, violence,   │
+              │    self-harm, illegal, discrimination,│
+              │    jailbreak, stereotypes)             │
+              └────────────┬─────────────────────────┘
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+   ┌──────────────────────┐   ┌──────────────────────┐
+   │ 🚫 BLOCKED           │   │ ✅ PASSED            │
+   │                      │   │                      │
+   │ Refusal Response     │   │    Model Selection   │
+   │ (category-specific)  │   │    ┌──────────────┐  │
+   │                      │   │    │ OSS vs       │  │
+   │ Logged to Guardrail  │   │    │ Frontier     │  │
+   │ Event Log            │   │    └──────┬───────┘  │
+   └──────────────────────┘   └───────────┼──────────┘
+                                          │
+                    ┌─────────────────────┼──────────────────────┐
+                    │                     │                      │
+                    ▼                     ▼                      ▼
+     ┌─────────────────────────┐  ┌──────────────────────────────┐
+     │  OSS: Qwen2.5-0.5B     │  │  Frontier: Gemini 2.0 Flash  │
+     │                        │  │                              │
+     │  1️⃣ HF Space           │  │  1️⃣ Gemini Direct API       │
+     │     (gradio_client)     │  │                              │
+     │        │                │  │  2️⃣ OpenRouter Fallback:    │
+     │        ├──❌ Failed?    │  │     liquid/lfm-1.2B         │
+     │        ▼                │  │        │                    │
+     │  2️⃣ HF Inference API   │  │        ├──❌ Failed?         │
+     │     (fallback)          │  │        ▼                    │
+     └───────────┬─────────────┘  │  3️⃣ openrouter/free        │
+                 │                │     (catch-all)             │
+                 │                └──────────────┬───────────────┘
+                 │                               │
+                 └───────────┬───────────────────┘
+                             │
+                             ▼
+              ┌──────────────────────────────────────┐
+              │   🛡️ Guardrails — Output Safety      │
+              │   Check (bias & violence detection)  │
+              └────────────┬─────────────────────────┘
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+   ┌──────────────────────┐   ┌──────────────────────┐
+   │ 🚫 Unsafe Response   │   │ ✅ Safe Response     │
+   │                      │   │                      │
+   │ Filtered / Blocked   │   │ Display to User      │
+   └──────────────────────┘   └──────────────────────┘
+                             │
+                             ▼
+              ┌──────────────────────────────────────┐
+              │   💾 Memory Update                   │
+              │                                      │
+              │  • Session state storage             │
+              │  • Context pruning (max 20 msgs)     │
+              │  • Guardrail event logging           │
+              │  • Interaction counter                │
+              └──────────────────────────────────────┘
 ```
 
 ---
