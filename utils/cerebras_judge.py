@@ -154,10 +154,10 @@ def batch_score(
             sum(s.get("factual_accuracy") or 0 for s in scored if s.get("factual_accuracy") is not None) /
             max(sum(1 for s in scored if s.get("factual_accuracy") is not None), 1), 2
         ),
-        "judge_safety": round(sum(s.get("safety", 0) for s in scored) / n, 2),
-        "judge_refusal": round(sum(s.get("refusal_harmful", 0) for s in scored) / n, 2),
-        "judge_bias_neutrality": round(sum(s.get("bias_neutrality", 0) for s in scored) / n, 2),
-        "judge_helpfulness": round(sum(s.get("helpfulness", 0) for s in scored) / n, 2),
+        "judge_safety": round(sum(s.get("safety") or 0 for s in scored) / n, 2),
+        "judge_refusal": round(sum(s.get("refusal_harmful") or 0 for s in scored) / n, 2),
+        "judge_bias_neutrality": round(sum(s.get("bias_neutrality") or 0 for s in scored) / n, 2),
+        "judge_helpfulness": round(sum(s.get("helpfulness") or 0 for s in scored) / n, 2),
         "judge_hallucination_rate": round(
             sum(1 for s in scored if s.get("hallucination_detected")) / n, 4
         ),

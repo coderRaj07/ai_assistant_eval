@@ -9,14 +9,18 @@ Uses LLM-as-judge approach to evaluate both OSS and Frontier models across:
 
 Generates metrics, visualizations, and comparison tables.
 """
+# python evaluation/evaluator.py --max-prompts 8
+# python evaluation/evaluator.py --max-prompts 10
+# python evaluation/evaluator.py --sample 2
 
 import json
 import os
 import sys
 import time
 import csv
+import random
 from datetime import datetime
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, Optional
 from pathlib import Path
 
 # Load environment variables from .env file
@@ -124,6 +128,27 @@ def load_prompts() -> Dict[str, List[str]]:
     return prompts
 
 
+def sample_total_prompts(prompts: Dict[str, List[str]], total: int = 10) -> Dict[str, List[str]]:
+    """
+    Randomly select exactly `total` prompts across all categories (1 per category at most).
+    Useful for quick evaluation runs with limited API calls.
+    """
+    sampled: Dict[str, List[str]] = {}
+    categories = list(prompts.keys())
+    random.shuffle(categories)
+
+    count = 0
+    for cat in categories:
+        if count >= total:
+            break
+        if prompts[cat]:
+            sampled[cat] = [prompts[cat][0]]
+            count += 1
+
+    print(f"  (Sampling {count} prompts total across {len(categories)} categories)")
+    return sampled
+
+
 def get_model_response(model_type: str, messages: List[Dict]) -> Dict[str, Any]:
     model_messages = [{"role": m["role"], "content": m["content"]} for m in messages]
     if model_type == "oss":
@@ -224,9 +249,10 @@ def evaluate_single_prompt(
     }
 
 
-def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, Any]:
+def run_evaluation(prompts: Dict[str, List[str]], model_type: str, sample_per_category: int = None, max_prompts: int = None) -> Dict[str, Any]:
     """
-    Run all prompts against a model.
+    Run prompts against a model. If sample_per_category is set, only tests that many prompts per category.
+    If max_prompts is set, samples that many prompts total across all categories (1 per category).
     
     Returns:
         Dict with results, metrics, and stats
@@ -240,10 +266,19 @@ def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, 
     metrics_by_category = {}
     total_start = time.time()
     
-    total_prompts = sum(len(v) for v in prompts.values())
+    # Sample prompts if requested
+    if max_prompts:
+        sampled = sample_total_prompts(prompts, total=max_prompts)
+    elif sample_per_category:
+        sampled = {k: v[:sample_per_category] for k, v in prompts.items()}
+        print(f"  (Sampling {sample_per_category} prompt(s) per category)")
+    else:
+        sampled = prompts
+    
+    total_prompts = sum(len(v) for v in sampled.values())
     completed = 0
     
-    for category, prompt_list in prompts.items():
+    for category, prompt_list in sampled.items():
         category_results = []
         
         for prompt in prompt_list:
@@ -857,6 +892,14 @@ def generate_text_report(comparison: Dict, oss_results: Dict, frontier_results: 
 
 def main():
     """Main evaluation entry point."""
+    import argparse
+    parser = argparse.ArgumentParser(description="Run AI Assistant Evaluation")
+    parser.add_argument("--sample", type=int, default=None,
+                       help="Sample N prompts per category (e.g., 2 for quick test)")
+    parser.add_argument("--max-prompts", type=int, default=None,
+                       help="Sample N total prompts across all categories (e.g., 10 for fast run)")
+    args = parser.parse_args()
+    
     print("=" * 60)
     print("AI ASSISTANT EVALUATION FRAMEWORK")
     print("=" * 60)
@@ -866,10 +909,10 @@ def main():
     
     # Run evaluations
     print("\n[1/2] Evaluating OSS model (Qwen2.5-0.5B)...")
-    oss_results = run_evaluation(prompts, "oss")
+    oss_results = run_evaluation(prompts, "oss", sample_per_category=args.sample, max_prompts=args.max_prompts)
     
     print("\n[2/2] Evaluating Frontier model...")
-    frontier_results = run_evaluation(prompts, "frontier")
+    frontier_results = run_evaluation(prompts, "frontier", sample_per_category=args.sample, max_prompts=args.max_prompts)
     
     # Generate comparison
     print("\n" + "=" * 60)
