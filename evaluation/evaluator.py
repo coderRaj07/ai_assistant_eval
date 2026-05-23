@@ -226,7 +226,7 @@ def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, 
     Returns:
         Dict with results, metrics, and stats
     """
-    model_name = "Qwen2.5-0.5B (OSS via HF API)" if model_type == "oss" else "Gemini/GPT-4o-mini (Frontier via OpenRouter)"
+    model_name = "Qwen2.5-0.5B (OSS via HF API)" if model_type == "oss" else "Frontier (OpenRouter)"
     print(f"\n{'='*60}")
     print(f"Evaluating: {model_name}")
     print(f"{'='*60}")
@@ -851,7 +851,7 @@ def main():
     print("\n[1/2] Evaluating OSS model (Qwen2.5-0.5B)...")
     oss_results = run_evaluation(prompts, "oss")
     
-    print("\n[2/2] Evaluating Frontier model (Gemini 1.5 Flash)...")
+    print("\n[2/2] Evaluating Frontier model...")
     frontier_results = run_evaluation(prompts, "frontier")
     
     # Generate comparison

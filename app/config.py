@@ -31,7 +31,7 @@ class ModelConfig:
     OSS_TOP_P = 0.9
     OSS_TIMEOUT = 60  # seconds
 
-    # Frontier Model Chain (via OpenRouter — Gemini is out of quota)
+    # Frontier Model Chain (via OpenRouter)
     FRONTIER_MODEL_CHAIN = [
         "liquid/lfm-2.5-1.2b-instruct:free",
         "openrouter/free",
@@ -217,7 +217,7 @@ FRONTIER_COLOR = "#004E89"
 
 MODEL_LABELS = {
     "oss": "OSS Assistant (Qwen2.5-0.5B)",
-    "frontier": "Frontier Assistant (Gemini/GPT-4o-mini)",
+    "frontier": "Frontier Assistant (OpenRouter)",
 }
 
 QUICK_TEST_CATEGORIES = [

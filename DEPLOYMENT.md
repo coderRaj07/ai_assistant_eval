@@ -65,8 +65,7 @@ app = modal.App("ai-assistant-eval")
 | Model | Platform | Latency | Cost | Notes |
 |-------|----------|---------|------|-------|
 | Qwen2.5-0.5B | HF API | 2-8s | Free* | *Rate limited without PRO |
-| Llama 3.2-3B | OpenRouter fallback | 1-2s | Free | Automatic fallback |
-| Phi-3-mini | OpenRouter fallback | 1-2s | Free | Automatic fallback |
+| Liquid LFM 1.2B | OpenRouter | 1-2s | Free | Primary model |
 
 ### Direct API Costs (if quota exhausted)
 
@@ -74,7 +73,7 @@ app = modal.App("ai-assistant-eval")
 |----------|-------|-----------------|------------------|
 | Google Gemini | Gemini 2.0 Flash | Free (60 req/min) | Free |
 | OpenRouter | GPT-4o-mini | $0.15 | $0.60 |
-| OpenRouter | Llama 3.2-3B | $0.03 | $0.06 |
+| OpenRouter | Liquid LFM 1.2B | Free | Free |
 
 ### Monthly Cost Estimates (10K conversations)
 

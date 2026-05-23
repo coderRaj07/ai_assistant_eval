@@ -21,7 +21,9 @@ if [ ! -f ".env" ]; then
     echo "   Creating .env template..."
     echo "# Hugging Face token (get from https://huggingface.co/settings/tokens)" > .env
     echo "HF_TOKEN=your_token_here" >> .env
-    echo "# Google Gemini API key (get from https://aistudio.google.com/apikey)" >> .env
+    echo "# OpenRouter API key (get from https://openrouter.ai/keys)" >> .env
+    echo "OPENROUTER_API_KEY=your_key_here" >> .env
+    echo "# Google Gemini API key (optional fallback, get from https://aistudio.google.com/apikey)" >> .env
     echo "GEMINI_API_KEY=your_key_here" >> .env
     echo "   Please edit .env with your actual API keys."
 fi

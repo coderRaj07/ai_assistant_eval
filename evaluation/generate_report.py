@@ -244,7 +244,7 @@ def generate_pdf_report(data: Dict, chart_files: List[str]) -> str:
     ax_sub = fig.add_axes([0.05, 0.87, 0.9, 0.04])
     ax_sub.axis('off')
     ax_sub.text(0, 0.5,
-        f"OSS: Qwen2.5-0.5B-Instruct (HF Inference)  |  Frontier: OpenRouter (Free model chain + Gemini fallback)",
+        f"OSS: Qwen2.5-0.5B-Instruct (HF Inference)  |  Frontier: OpenRouter (Frontier models)",
         fontsize=9, color='gray', va='center')
     
     # ── Insert Charts ──

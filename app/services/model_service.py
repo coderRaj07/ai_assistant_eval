@@ -2,7 +2,7 @@
 Model Service - Orchestrates model calls.
 
 Provides a unified interface for interacting with both OSS (Qwen2.5) and
-Frontier (Gemini 1.5 Flash) models. Handles guardrail integration, latency
+Frontier (OpenRouter) models. Handles guardrail integration, latency
 tracking, and standardized response formatting.
 """
 
@@ -87,7 +87,7 @@ class ModelService:
     def get_model_name(model_type: str) -> str:
         names = {
             "oss": "Qwen2.5-0.5B (OSS via HF API)",
-            "frontier": "Gemini/GPT-4o-mini/DeepSeek (Frontier via OpenRouter)",
+            "frontier": "OpenRouter (Frontier)",
         }
         return names.get(model_type, model_type)
 

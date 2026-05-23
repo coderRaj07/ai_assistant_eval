@@ -38,7 +38,7 @@ class AboutPanel:
         This platform compares two AI assistants:
 
         1. **Open Source Assistant**: Qwen2.5-0.5B-Instruct (via Hugging Face Inference API)
-        2. **Frontier Assistant**: OpenRouter (Gemini/Llama/Phi/Mistral with free fallback)
+        2. **Frontier Assistant**: OpenRouter (Frontier models via API)
 
         #### Key Features
 
@@ -75,7 +75,7 @@ class AboutPanel:
         | Model | Type | Params |
         |-------|------|--------|
         | Qwen2.5-0.5B | OSS | 500M |
-        | OpenRouter (Gemini/Llama/Phi/Mistral) | Frontier | varies |
+        | OpenRouter | Frontier | varies |
         """)
 
     def _render_cost_estimate(self) -> None:
@@ -87,10 +87,9 @@ class AboutPanel:
         - ~$0.01/1000 inferences
 
         **Frontier (OpenRouter Free Models)**:
-        - Gemini 2.0 Flash: 10 req/min free
-        - Llama 3.2 3B: 20 req/min free
-        - Phi-3 Mini: 20 req/min free
-        - Mistral 7B: 10 req/min free
+        - OpenRouter free tier: 20+ models available
+        - GPT-4o-mini: 200 req/min (free tier)
+        - Gemini 2.0 Flash: 60 req/min (free tier)
         """)
 
     def _render_links(self) -> None:

@@ -1,7 +1,7 @@
 """
 AI Assistant Evaluation Platform - Entry Point
 ===============================================
-Compare Open Source (Qwen2.5-0.5B-Instruct) vs Frontier (Gemini 1.5 Flash) AI Assistants.
+Compare Open Source (Qwen2.5-0.5B-Instruct) vs Frontier (OpenRouter) AI Assistants.
 
 Features:
 - Multi-turn conversation with both assistants

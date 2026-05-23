@@ -34,21 +34,21 @@
 This project builds and evaluates two AI personal assistants:
 
 1. **Open Source Assistant**: Qwen2.5-0.5B-Instruct deployed via Hugging Face Inference API
-2. **Frontier Model Assistant**: Gemini 1.5 Flash via Google Generative AI API
+2. **Frontier Model Assistant**: OpenRouter (Frontier models via free API tier)
 
 Both assistants support multi-turn conversations, conversational memory, and basic assistant behavior. The evaluation framework tests them across **170+ prompts** in **17 categories** covering factual accuracy, bias, jailbreak resistance, and content safety.
 
 ### Key Deliverables
 
-| Deliverable | Status |
-|-------------|--------|
-| ✅ Multi-turn conversation UI | Complete |
-| ✅ Guardrails & Safety Layer | Complete |
+| Deliverable                            | Status   |
+| -------------------------------------- | -------- |
+| ✅ Multi-turn conversation UI          | Complete |
+| ✅ Guardrails & Safety Layer           | Complete |
 | ✅ Evaluation Framework (170+ prompts) | Complete |
-| ✅ LLM-as-Judge scoring | Complete |
-| ✅ Visual comparison reports | Complete |
-| ✅ Hugging Face Spaces deployment | Ready |
-| ✅ Evaluation PDF generation | Complete |
+| ✅ LLM-as-Judge scoring                | Complete |
+| ✅ Visual comparison reports           | Complete |
+| ✅ Hugging Face Spaces deployment      | Ready    |
+| ✅ Evaluation PDF generation           | Complete |
 
 ---
 
@@ -69,7 +69,7 @@ ai_assistant_eval/
 │   │                              #   - Latency tracking & error handling
 │   │                              #   - Configurable generation parameters
 │   │
-│   ├── gemini_model.py            # Frontier model: Gemini 1.5 Flash via Google API
+│   ├── openrouter_model.py        # Frontier model: OpenRouter (GPT-4o-mini, DeepSeek, Gemini)
 │   │                              #   - System prompt injection
 │   │                              #   - Gemini safety settings (4 harm categories)
 │   │                              #   - Guardrail integration
@@ -132,25 +132,25 @@ User Input
 
 ### Open Source: Qwen2.5-0.5B-Instruct
 
-| Property | Value |
-|----------|-------|
-| **Model** | Qwen/Qwen2.5-0.5B-Instruct |
-| **Size** | 500M parameters |
-| **Deployment** | Hugging Face Inference API |
-| **Context Length** | 32K tokens |
-| **Architecture** | Transformer decoder-only |
-| **License** | Apache 2.0 |
+| Property           | Value                      |
+| ------------------ | -------------------------- |
+| **Model**          | Qwen/Qwen2.5-0.5B-Instruct |
+| **Size**           | 500M parameters            |
+| **Deployment**     | Hugging Face Inference API |
+| **Context Length** | 32K tokens                 |
+| **Architecture**   | Transformer decoder-only   |
+| **License**        | Apache 2.0                 |
 
 **Tradeoff**: Smaller model size means faster inference but reduced reasoning capability compared to frontier models. Great for cost-sensitive deployments.
 
-### Frontier: Gemini 1.5 Flash
+### Frontier: OpenRouter (Free Tier)
 
-| Property | Value |
-|----------|-------|
-| **Model** | gemini-1.5-flash |
-| **Deployment** | Google Generative AI API |
-| **Context Length** | 1M tokens |
-| **Pricing** | $0.075/1M input tokens, $0.30/1M output tokens |
+| Property            | Value                                          |
+| ------------------- | ---------------------------------------------- |
+| **Model**           | gemini-1.5-flash                               |
+| **Deployment**      | Google Generative AI API                       |
+| **Context Length**  | 1M tokens                                      |
+| **Pricing**         | $0.075/1M input tokens, $0.30/1M output tokens |
 | **Built-in Safety** | 4 harm categories with configurable thresholds |
 
 **Tradeoff**: Higher quality responses with built-in safety, but with API costs and potential data privacy concerns.
@@ -160,18 +160,21 @@ User Input
 ## ✨ Features
 
 ### Multi-Turn Conversations
+
 - Full chat history maintained in session state
 - System prompt injection for consistent behavior
 - Automatic context pruning (max 20 messages) to avoid token limits
 - Configurable model selection per conversation
 
 ### Guardrails & Safety Layer
+
 - **7 input detection categories**: malware, violence, self-harm, illegal activities, discrimination, jailbreak attempts, stereotypes
 - **Output safety checks**: bias detection, violence monitoring
 - **Category-specific refusal responses**: polite, informative, and contextual
 - **Real-time guardrail indicators** in the UI
 
 ### Evaluation Framework
+
 - **170+ prompts** across 17 categories
 - **Heuristic-based scoring**: refusal detection, bias challenging, jailbreak resistance
 - **5 visualization charts**: group comparison, hallucination rates, radar chart, latency comparison, overall summary
@@ -179,6 +182,7 @@ User Input
 - **Quick test mode** for rapid A/B testing
 
 ### Observability
+
 - Per-response latency tracking
 - Guardrail event logging with timestamps
 - Context statistics (messages, interactions, guardrail events)
@@ -211,6 +215,7 @@ echo "GEMINI_API_KEY=your_gemini_api_key_here" >> .env
 ```
 
 **Where to get API keys:**
+
 - **HF_TOKEN**: [Hugging Face Settings → Access Tokens](https://huggingface.co/settings/tokens)
 - **GEMINI_API_KEY**: [Google AI Studio → API Keys](https://aistudio.google.com/apikey)
 
@@ -281,6 +286,7 @@ python evaluation/evaluator.py
 ```
 
 This will:
+
 1. Test all prompts against both models
 2. Score responses using heuristic evaluation
 3. Generate 5 comparison visualizations
@@ -316,25 +322,25 @@ Use the Live Evaluation tab in the app to test individual prompts:
 
 Our evaluation framework covers **170+ prompts** across **17 categories**:
 
-| Category | Prompts | What We Test |
-|----------|---------|--------------|
-| **Factual** | 25 | General knowledge, history, science |
-| **Reasoning** | 5 | Logic puzzles, math word problems |
-| **Bias/Gender** | 10 | Gender stereotypes, leadership bias |
-| **Bias/Race** | 10 | Racial stereotypes, profiling |
-| **Bias/Religion** | 10 | Religious stereotypes, discrimination |
-| **Bias/Age** | 10 | Age discrimination, generational stereotypes |
-| **Stereotypes** | 10 | Occupational, cultural stereotypes |
-| **Jailbreak/Direct** | 10 | Direct instruction override attempts |
-| **Jailbreak/Prompt Leak** | 10 | System prompt extraction attempts |
-| **Jailbreak/Roleplay** | 10 | Roleplay-based manipulation |
-| **Safety/Violence** | 10 | Violence-related harmful requests |
-| **Safety/Self-harm** | 10 | Self-harm related requests |
-| **Safety/Discrimination** | 10 | Hate speech, discriminatory content |
-| **Safety/Misinformation** | 10 | Conspiracy theories, false claims |
-| **Safety/Sexual** | 10 | Sexual content safety, grooming |
-| **Political** | 10 | Political opinion neutrality |
-| **Ethical Dilemmas** | 10 | Ethical reasoning quality |
+| Category                  | Prompts | What We Test                                 |
+| ------------------------- | ------- | -------------------------------------------- |
+| **Factual**               | 25      | General knowledge, history, science          |
+| **Reasoning**             | 5       | Logic puzzles, math word problems            |
+| **Bias/Gender**           | 10      | Gender stereotypes, leadership bias          |
+| **Bias/Race**             | 10      | Racial stereotypes, profiling                |
+| **Bias/Religion**         | 10      | Religious stereotypes, discrimination        |
+| **Bias/Age**              | 10      | Age discrimination, generational stereotypes |
+| **Stereotypes**           | 10      | Occupational, cultural stereotypes           |
+| **Jailbreak/Direct**      | 10      | Direct instruction override attempts         |
+| **Jailbreak/Prompt Leak** | 10      | System prompt extraction attempts            |
+| **Jailbreak/Roleplay**    | 10      | Roleplay-based manipulation                  |
+| **Safety/Violence**       | 10      | Violence-related harmful requests            |
+| **Safety/Self-harm**      | 10      | Self-harm related requests                   |
+| **Safety/Discrimination** | 10      | Hate speech, discriminatory content          |
+| **Safety/Misinformation** | 10      | Conspiracy theories, false claims            |
+| **Safety/Sexual**         | 10      | Sexual content safety, grooming              |
+| **Political**             | 10      | Political opinion neutrality                 |
+| **Ethical Dilemmas**      | 10      | Ethical reasoning quality                    |
 
 ---
 
@@ -361,12 +367,12 @@ git push space main
 
 ### Cost Estimates for Deployment
 
-| Model | Platform | Cost/Request | Cold Start |
-|-------|----------|-------------|------------|
-| Qwen2.5-0.5B | HF Inference API | Free (rate limited) | ~5-10s |
-| Qwen2.5-0.5B | HF Spaces (CPU) | Free | ~2-5s |
-| Qwen2.5-0.5B | HF Spaces (GPU) | ~$0.40/hr | Instant |
-| Gemini 1.5 Flash | Google API | $0.075/1M input tokens | Instant |
+| Model            | Platform         | Cost/Request           | Cold Start |
+| ---------------- | ---------------- | ---------------------- | ---------- |
+| Qwen2.5-0.5B     | HF Inference API | Free (rate limited)    | ~5-10s     |
+| Qwen2.5-0.5B     | HF Spaces (CPU)  | Free                   | ~2-5s      |
+| Qwen2.5-0.5B     | HF Spaces (GPU)  | ~$0.40/hr              | Instant    |
+| Gemini 1.5 Flash | Google API       | $0.075/1M input tokens | Instant    |
 
 ---
 
@@ -374,25 +380,26 @@ git push space main
 
 ### OSS Model (Qwen2.5-0.5B via HF Inference API)
 
-| Metric | Value |
-|--------|-------|
-| **Avg Latency** | 2-8 seconds (depends on queue) |
-| **Cost per 1K requests** | ~$0.01 (free tier available) |
-| **Rate Limits** | 30 req/min (free), 300 req/min (paid) |
-| **Cold Start** | 5-10 seconds (model loading) |
+| Metric                   | Value                                 |
+| ------------------------ | ------------------------------------- |
+| **Avg Latency**          | 2-8 seconds (depends on queue)        |
+| **Cost per 1K requests** | ~$0.01 (free tier available)          |
+| **Rate Limits**          | 30 req/min (free), 300 req/min (paid) |
+| **Cold Start**           | 5-10 seconds (model loading)          |
 
 ### Frontier Model (Gemini 1.5 Flash)
 
-| Metric | Value |
-|--------|-------|
-| **Avg Latency** | 0.5-2 seconds |
+| Metric                   | Value                                  |
+| ------------------------ | -------------------------------------- |
+| **Avg Latency**          | 0.5-2 seconds                          |
 | **Cost per 1K requests** | ~$0.075 input + $0.30 output = ~$0.375 |
-| **Rate Limits** | 60 req/min (free tier) |
-| **Cold Start** | None (always warm) |
+| **Rate Limits**          | 60 req/min (free tier)                 |
+| **Cold Start**           | None (always warm)                     |
 
 ### Key Insight
 
 The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier model. For production use cases:
+
 - **Cost-sensitive**: Use OSS model with caching
 - **Quality-sensitive**: Use Frontier model
 - **Hybrid**: Use OSS for simple queries, Frontier for complex ones
@@ -404,6 +411,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 ### Decision 1: Hugging Face Inference API vs Local Deployment
 
 **Chosen**: Hugging Face Inference API
+
 - ✅ No GPU required on local machine
 - ✅ Free tier available
 - ✅ Easy integration via REST API
@@ -411,6 +419,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 - ❌ Rate limited on free tier
 
 **Alternative**: Local Ollama deployment
+
 - ✅ Lower latency (no network)
 - ✅ No API costs
 - ❌ Requires GPU for reasonable performance
@@ -419,6 +428,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 ### Decision 2: Heuristic Evaluation vs LLM-as-Judge
 
 **Chosen**: Hybrid approach (heuristic + LLM-as-Judge)
+
 - ✅ Deterministic, reproducible results
 - ✅ No API costs for evaluation
 - ✅ Fast evaluation (no model calls)
@@ -427,6 +437,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 - ❌ May miss subtle hallucinations
 
 **Alternative**: Pure LLM-as-Judge
+
 - ✅ More accurate evaluation
 - ✅ Can detect nuanced issues
 - ❌ Expensive at scale (multiple model calls per prompt)
@@ -435,6 +446,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 ### Decision 3: Streamlit vs FastAPI
 
 **Chosen**: Streamlit
+
 - ✅ Rapid prototyping
 - ✅ Built-in chat components
 - ✅ Session state management built-in
@@ -443,6 +455,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 - ❌ Limited to single-page apps
 
 **Alternative**: FastAPI + React
+
 - ✅ More scalable
 - ✅ Better for production
 - ❌ More complex setup
@@ -451,6 +464,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 ### Decision 4: Guardrails Implementation
 
 **Chosen**: Rule-based regex patterns
+
 - ✅ Deterministic behavior
 - ✅ No API costs
 - ✅ Immediate response
@@ -459,6 +473,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 - ❌ High false positive rate
 
 **Alternative**: ML-based content moderation
+
 - ✅ More accurate detection
 - ✅ Can catch novel attacks
 - ❌ Requires additional API calls
@@ -467,6 +482,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 ### Decision 5: Memory Implementation
 
 **Chosen**: Streamlit session state with pruning
+
 - ✅ No external dependencies (Redis, PostgreSQL)
 - ✅ Simple and reliable
 - ✅ Automatic cleanup
@@ -474,6 +490,7 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 - ❌ No persistence across sessions
 
 **Alternative**: PostgreSQL + Redis
+
 - ✅ Persistent across sessions
 - ✅ Multi-user support
 - ❌ Additional infrastructure
@@ -545,20 +562,20 @@ The OSS model is ~37x cheaper per request but 3-4x slower than the Frontier mode
 
 ## 📈 Evaluation Results Summary
 
-*Results depend on actual API calls. Run the evaluator to get current results.*
+_Results depend on actual API calls. Run the evaluator to get current results._
 
 ### Expected Findings
 
 Based on the architecture and model characteristics:
 
-| Dimension | Expected OSS Score | Expected Frontier Score | Expected Winner |
-|-----------|-------------------|----------------------|-----------------|
-| **Safety** | 4.0-4.5 | 4.5-5.0 | Frontier |
-| **Bias Neutrality** | 3.5-4.0 | 4.5-5.0 | Frontier |
-| **Refusal Handling** | 4.0-4.5 | 4.5-5.0 | Frontier |
-| **Jailbreak Resistance** | 3.5-4.0 | 4.0-4.5 | Frontier |
-| **Factual Accuracy** | 3.0-3.5 | 4.5-5.0 | Frontier |
-| **Helpfulness** | 3.5-4.0 | 4.5-5.0 | Frontier |
+| Dimension                | Expected OSS Score | Expected Frontier Score | Expected Winner |
+| ------------------------ | ------------------ | ----------------------- | --------------- |
+| **Safety**               | 4.0-4.5            | 4.5-5.0                 | Frontier        |
+| **Bias Neutrality**      | 3.5-4.0            | 4.5-5.0                 | Frontier        |
+| **Refusal Handling**     | 4.0-4.5            | 4.5-5.0                 | Frontier        |
+| **Jailbreak Resistance** | 3.5-4.0            | 4.0-4.5                 | Frontier        |
+| **Factual Accuracy**     | 3.0-3.5            | 4.5-5.0                 | Frontier        |
+| **Helpfulness**          | 3.5-4.0            | 4.5-5.0                 | Frontier        |
 
 ### Key Insights
 
