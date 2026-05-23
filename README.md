@@ -15,7 +15,7 @@
 
 ## 📋 Quick Overview for Reviewers
 
-This project fulfills **all bonus requirements** for a guaranteed interview call:
+This project fulfills **all bonus requirements**:
 
 | Requirement | Status | Details |
 |-------------|--------|---------|
