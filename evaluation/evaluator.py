@@ -932,6 +932,32 @@ def main():
     print("\nGenerating report...")
     report = generate_text_report(comparison, oss_results, frontier_results, timestamp)
     
+    # Generate PDF with infographics (reuse generate_report.py logic)
+    print("\n[EXTRA] Generating infographic PDF report...")
+    try:
+        from evaluation.generate_report import generate_infographic_charts, generate_pdf_report
+        
+        # Build data dict expected by generate_report
+        report_data = {
+            "timestamp": timestamp,
+            "oss_model": oss_results["model_name"],
+            "frontier_model": frontier_results["model_name"],
+            "comparison": comparison,
+            "oss_results_summary": {k: v for k, v in oss_results.items() if k != "results"},
+            "frontier_results_summary": {k: v for k, v in frontier_results.items() if k != "results"},
+        }
+        
+        print("  Generating infographic charts...")
+        chart_files = generate_infographic_charts(report_data)
+        
+        print("  Generating PDF report...")
+        pdf_path = generate_pdf_report(report_data, chart_files)
+        print(f"  ✅ PDF report: {pdf_path}")
+    except ImportError:
+        print("  ⚠️ Skipping PDF: generate_report module not available (run separately with python evaluation/generate_report.py)")
+    except Exception as e:
+        print(f"  ⚠️ Skipping PDF: {e}")
+    
     print("\n" + "✓" * 30)
     print(f"Evaluation complete! Results saved to {RESULTS_DIR}/")
     print("✓" * 30)
