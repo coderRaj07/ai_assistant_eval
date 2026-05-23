@@ -31,12 +31,16 @@ class ModelConfig:
     OSS_TOP_P = 0.9
     OSS_TIMEOUT = 60  # seconds
 
-    # Frontier Model (Gemini 1.5 Flash)
-    GEMINI_MODEL_ID = "gemini-1.5-flash"
-    GEMINI_TEMPERATURE = 0.7
-    GEMINI_TOP_P = 0.95
-    GEMINI_TOP_K = 40
-    GEMINI_MAX_OUTPUT_TOKENS = 1024
+    # Frontier Model (OpenRouter with free model fallback)
+    OR_MODEL_CHAIN = [
+        "liquid/lfm-2.5-1.2b-instruct:free",
+        "openai/gpt-4o-mini:free",
+        "liquid/lfm-2.5-1.2b-thinking:free",
+        "meta-llama/llama-3.2-3b-instruct:free",
+        "nvidia/nemotron-nano-9b-v2:free",
+    ]
+    OR_TEMPERATURE = 0.7
+    OR_MAX_TOKENS = 1024
 
     # Shared
     SYSTEM_PROMPT = (
@@ -216,7 +220,7 @@ FRONTIER_COLOR = "#004E89"
 
 MODEL_LABELS = {
     "oss": "OSS Assistant (Qwen2.5)",
-    "frontier": "Frontier Assistant (Gemini)",
+    "frontier": "Frontier Assistant (OpenRouter)",
 }
 
 QUICK_TEST_CATEGORIES = [

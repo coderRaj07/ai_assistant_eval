@@ -42,9 +42,8 @@ class ModelService:
         Returns:
             ModelResponse with response text, latency, guardrail info, errors
         """
-        # Lazy import to avoid circular dependencies and heavy imports at module level
         from utils.hf_model import generate_response as hf_generate
-        from utils.gemini_model import generate_response as gemini_generate
+        from utils.openrouter_model import generate_response as or_generate
 
         result = ModelResponse()
 
@@ -60,11 +59,10 @@ class ModelService:
             result.safety_category = safety_check.category
             return result
 
-        # --- Model Call ---
         if model_type == "oss":
             response_dict = hf_generate(messages)
         else:
-            response_dict = gemini_generate(messages)
+            response_dict = or_generate(messages)
 
         # Map legacy dict response to ModelResponse
         result.response = response_dict.get("response", "")
@@ -87,18 +85,16 @@ class ModelService:
 
     @staticmethod
     def get_model_name(model_type: str) -> str:
-        """Get human-readable model name."""
         names = {
             "oss": "Qwen2.5-0.5B (OSS)",
-            "frontier": "Gemini 1.5 Flash (Frontier)",
+            "frontier": "OpenRouter (Gemini/Llama/Phi/Mistral)",
         }
         return names.get(model_type, model_type)
 
     @staticmethod
     def get_model_label(model_type: str) -> str:
-        """Get UI-friendly model label."""
         labels = {
             "oss": ModelConfig.OSS_MODEL_ID,
-            "frontier": ModelConfig.GEMINI_MODEL_ID,
+            "frontier": " | ".join(ModelConfig.OR_MODEL_CHAIN),
         }
         return labels.get(model_type, model_type)

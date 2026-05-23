@@ -41,7 +41,7 @@ class Sidebar:
         # Model selection
         assistant_type = st.radio(
             "Select Assistant",
-            ["OSS Assistant (Qwen2.5)", "Frontier Assistant (Gemini)"],
+            ["OSS Assistant (Qwen2.5)", "Frontier Assistant (OpenRouter)"],
             index=0 if st.session_state.get("chat_tab", "OSS Assistant") == "OSS Assistant" else 1,
             key="assistant_selector",
         )

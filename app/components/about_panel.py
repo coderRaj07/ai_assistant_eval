@@ -38,7 +38,7 @@ class AboutPanel:
         This platform compares two AI assistants:
 
         1. **Open Source Assistant**: Qwen2.5-0.5B-Instruct (via Hugging Face Inference API)
-        2. **Frontier Assistant**: Gemini 1.5 Flash (via Google Generative AI API)
+        2. **Frontier Assistant**: OpenRouter (Gemini/Llama/Phi/Mistral with free fallback)
 
         #### Key Features
 
@@ -75,7 +75,7 @@ class AboutPanel:
         | Model | Type | Params |
         |-------|------|--------|
         | Qwen2.5-0.5B | OSS | 500M |
-        | Gemini 1.5 Flash | Frontier | - |
+        | OpenRouter (Gemini/Llama/Phi/Mistral) | Frontier | varies |
         """)
 
     def _render_cost_estimate(self) -> None:
@@ -86,10 +86,11 @@ class AboutPanel:
         - Free tier available
         - ~$0.01/1000 inferences
 
-        **Frontier (Gemini API)**:
-        - Free tier: 60 requests/min
-        - Paid: $0.075/1M input tokens
-        - Paid: $0.30/1M output tokens
+        **Frontier (OpenRouter Free Models)**:
+        - Gemini 2.0 Flash: 10 req/min free
+        - Llama 3.2 3B: 20 req/min free
+        - Phi-3 Mini: 20 req/min free
+        - Mistral 7B: 10 req/min free
         """)
 
     def _render_links(self) -> None:
@@ -97,4 +98,4 @@ class AboutPanel:
         st.markdown("#### Links")
         st.markdown("- [GitHub Repository](https://github.com/coderraj07/ai_assistant_eval)")
         st.markdown("- [Hugging Face Model](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)")
-        st.markdown("- [Gemini API](https://ai.google.dev/)")
+        st.markdown("- [OpenRouter](https://openrouter.ai/)")

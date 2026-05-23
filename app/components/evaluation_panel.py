@@ -103,7 +103,7 @@ class EvaluationPanel:
             )
 
         with res_col2:
-            st.markdown("#### Frontier (Gemini 1.5 Flash)")
+            st.markdown("#### Frontier (OpenRouter)")
             st.info(frontier_response.response)
             st.caption(
                 f"Latency: {frontier_response.latency_s:.1f}s | "

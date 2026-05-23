@@ -103,7 +103,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<div class="sub-header">Comparing Open Source (Qwen2.5-0.5B) vs Frontier (Gemini 1.5 Flash) AI Assistants</div>',
+    '<div class="sub-header">Comparing Open Source (Qwen2.5-0.5B) vs Frontier (OpenRouter Free Models) AI Assistants</div>',
     unsafe_allow_html=True,
 )
 

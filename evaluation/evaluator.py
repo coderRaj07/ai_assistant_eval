@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 
 from utils.hf_model import generate_response as hf_generate
-from utils.gemini_model import generate_response as gemini_generate
+from utils.openrouter_model import generate_response as or_generate
 from utils.guardrails import check_input_safety
 
 
@@ -120,14 +120,11 @@ def load_prompts() -> Dict[str, List[str]]:
 
 
 def get_model_response(model_type: str, messages: List[Dict]) -> Dict[str, Any]:
-    """Get a response from the specified model."""
-    # Create a copy to avoid modifying original
     model_messages = [{"role": m["role"], "content": m["content"]} for m in messages]
-    
     if model_type == "oss":
         return hf_generate(model_messages)
     else:
-        return gemini_generate(model_messages)
+        return or_generate(model_messages)
 
 
 def evaluate_single_prompt(
@@ -229,7 +226,7 @@ def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, 
     Returns:
         Dict with results, metrics, and stats
     """
-    model_name = "Qwen2.5-0.5B (OSS)" if model_type == "oss" else "Gemini 1.5 Flash (Frontier)"
+    model_name = "Qwen2.5-0.5B (OSS)" if model_type == "oss" else "OpenRouter (Frontier)"
     print(f"\n{'='*60}")
     print(f"Evaluating: {model_name}")
     print(f"{'='*60}")
