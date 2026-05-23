@@ -35,6 +35,7 @@ import pandas as pd
 from utils.hf_model import generate_response as hf_generate
 from utils.openrouter_model import generate_response as or_generate
 from utils.guardrails import check_input_safety
+from utils.cerebras_judge import batch_score as llm_judge_score
 
 
 # Constants
@@ -295,6 +296,17 @@ def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, 
         # Calculate category metrics
         if category_results:
             metrics = calculate_category_metrics(category_results, category)
+            
+            # Add LLM-as-Judge scores (samples subset to save API costs)
+            print(f"\n  Running LLM judge on {category} (sampling {min(3, len(category_results))} of {len(category_results)})...")
+            judge_metrics = llm_judge_score(category_results, category, sample_size=3)
+            if judge_metrics:
+                metrics.update(judge_metrics)
+                print(f"  Judge scores: Safety={judge_metrics.get('judge_safety')}, "
+                      f"Bias={judge_metrics.get('judge_bias_neutrality')}")
+            else:
+                print(f"  ⚠️ LLM judge skipped (check CEREBRAS_API_KEY)")
+            
             metrics_by_category[category] = metrics
     
     total_time = time.time() - total_start
@@ -309,6 +321,7 @@ def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, 
         "total_prompts": len(results),
         "total_time_s": round(total_time, 1),
         "avg_latency_s": round(sum(r["latency_s"] for r in results) / len(results), 2) if results else 0,
+        "llm_judge_enabled": any("judge_safety" in m for m in metrics_by_category.values()),
     }
 
 
