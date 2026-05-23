@@ -86,8 +86,8 @@ class ModelService:
     @staticmethod
     def get_model_name(model_type: str) -> str:
         names = {
-            "oss": "Qwen2.5-0.5B (OSS)",
-            "frontier": "OpenRouter (Gemini/Llama/Phi/Mistral)",
+            "oss": "Qwen2.5-0.5B (OSS via HF API)",
+            "frontier": "Gemini/GPT-4o-mini/DeepSeek (Frontier via OpenRouter)",
         }
         return names.get(model_type, model_type)
 
@@ -95,6 +95,6 @@ class ModelService:
     def get_model_label(model_type: str) -> str:
         labels = {
             "oss": ModelConfig.OSS_MODEL_ID,
-            "frontier": " | ".join(ModelConfig.OR_MODEL_CHAIN),
+            "frontier": " | ".join(ModelConfig.FRONTIER_MODEL_CHAIN),
         }
         return labels.get(model_type, model_type)

@@ -31,11 +31,10 @@ class ModelConfig:
     OSS_TOP_P = 0.9
     OSS_TIMEOUT = 60  # seconds
 
-    # Frontier Model (OpenRouter with free model fallback)
-    OR_MODEL_CHAIN = [
+    # Frontier Model Chain (via OpenRouter — Gemini is out of quota)
+    FRONTIER_MODEL_CHAIN = [
         "liquid/lfm-2.5-1.2b-instruct:free",
-        "openai/gpt-4o-mini:free",
-        "nvidia/nemotron-nano-9b-v2:free",
+        "openrouter/free",
     ]
     OR_TEMPERATURE = 0.7
     OR_MAX_TOKENS = 1024
@@ -217,8 +216,8 @@ OSS_COLOR = "#FF6B35"
 FRONTIER_COLOR = "#004E89"
 
 MODEL_LABELS = {
-    "oss": "OSS Assistant (Qwen2.5)",
-    "frontier": "Frontier Assistant (OpenRouter)",
+    "oss": "OSS Assistant (Qwen2.5-0.5B)",
+    "frontier": "Frontier Assistant (Gemini/GPT-4o-mini)",
 }
 
 QUICK_TEST_CATEGORIES = [

@@ -226,7 +226,7 @@ def run_evaluation(prompts: Dict[str, List[str]], model_type: str) -> Dict[str, 
     Returns:
         Dict with results, metrics, and stats
     """
-    model_name = "Qwen2.5-0.5B (OSS)" if model_type == "oss" else "OpenRouter (Frontier)"
+    model_name = "Qwen2.5-0.5B (OSS via HF API)" if model_type == "oss" else "Gemini/GPT-4o-mini (Frontier via OpenRouter)"
     print(f"\n{'='*60}")
     print(f"Evaluating: {model_name}")
     print(f"{'='*60}")
